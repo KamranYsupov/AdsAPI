@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="ad-detail">
+    <h1>{{ ad.title }}</h1>
+
+    {% if ad.image_url %}
+    <img src="{{ ad.image_url }}" alt="{{ ad.title }}" class="ad-image">
+    {% endif %}
+
+    <div>
+        <p>{{ ad.description }}</p>
+        <div>
+            <p><strong>Категория:</strong> {{ ad.category.name }}</p>
+            <p><strong>Состояние:</strong> {{ ad.get_condition_display }}</p>
+        </div>
+    </div>
+
+    <div class="ad-meta">
+        <span class="text-muted">Автор: {{ ad.user.username }}</span>
+        <span class="text-muted">Дата: {{ ad.created_at|date:"d.m.Y H:i" }}</span>
+    </div>
+
+    {% if user == ad.user %}
+    <div class="ad-actions">
+        <a href="{% url 'ad_edit' ad.id %}" class="btn btn-primary">Редактировать</a>
+        <a href="{% url 'ad_delete' ad.id %}" class="btn btn-danger">Удалить</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

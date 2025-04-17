@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Создание предложения обмена</h1>
+<form method="post">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label>Ваше объявление:</label>
+        <select name="ad_sender_id" class="form-control">
+            {% for ad in user_ads %}
+            <option value="{{ ad.id }}">{{ ad.title }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        {{ form.ad_receiver.label_tag }}
+        {{ form.ad_receiver }}
+    </div>
+
+    <div class="form-group">
+        {{ form.comment.label_tag }}
+        {{ form.comment }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Отправить предложение</button>
+</form>
+{% endblock %}

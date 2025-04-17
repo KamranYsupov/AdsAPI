@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Мои предложения обмена</h1>
+
+<div class="filters mb-4">
+    <form method="get" class="row g-3">
+        <div class="col-md-3">
+            <label class="form-label">Статус</label>
+            <select name="status" class="form-select">
+                <option value="">Все</option>
+                {% for status in status_choices %}
+                <option value="{{ status.0 }}" {% if request.GET.status == status.0 %}selected{% endif %}>
+                    {{ status.1 }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary mt-4">Фильтровать</button>
+        </div>
+    </form>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Мое предложение</th>
+            <th>Предложение мне</th>
+            <th>Статус</th>
+            <th>Дата</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for proposal in proposals %}
+        <tr>
+            <td>
+                <a href="{% url 'ad_detail' proposal.ad_sender.id %}">
+                    {{ proposal.ad_sender.title }}
+                </a>
+            </td>
+            <td>
+                <a href="{% url 'ad_detail' proposal.ad_receiver.id %}">
+                    {{ proposal.ad_receiver.title }}
+                </a>
+            </td>
+            <td>{{ proposal.get_status_display }}</td>
+            <td>{{ proposal.created_at|date:"d.m.Y H:i" }}</td>
+            <td>
+                <a href="{% url 'proposal_detail' proposal.id %}" class="btn btn-sm btn-info">
+                    Подробнее
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">Нет предложений</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% include 'includes/pagination.html' %}
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Список объявлений</h1>
+
+
+
+
+<form method="get">
+    <input type="text" name="q" placeholder="Поиск...">
+    <select name="category">
+        {% if current_category %}
+        <option value="{{ current_category.id }}">{{ current_category.name }}</option>
+        {% endif %}
+        <option value="">Все категории</option>
+        {% for category in categories %}
+            {% if current_category != category %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+    <select name="condition">
+        {% if current_condition.0 %}
+        <option value="{{ current_condition.0 }}">{{ current_condition.1 }}</option>
+        {% endif %}
+        <option value="">Все состояния</option>
+        {% for cond in conditions %}
+            {% if cond.0 != current_condition.0 %}
+            <option value="{{ cond.0 }}">{{ cond.1 }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+    <button type="submit">Фильтровать</button>
+</form>
+
+{% for ad in page_obj %}
+<a href="{% url 'ad_detail' ad.id %}">
+    <div class="ad-card">
+        {% if ad.image_url %}
+        <img src="{{ ad.image_url }}" alt="{{ ad.title }}" class="ad-image">
+        {% endif %}
+        <h3>{{ ad.title }}</h3>
+        <p>{{ ad.description|truncatechars:100 }}</p>
+        <p>Категория: {{ ad.category.name }}</p>
+        <p>Состояние: {{ ad.get_condition_display }}</p>
+    </div>
+</a>
+
+{% endfor %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}">предыдущая</a>
+        {% endif %}
+
+        <span class="current">
+            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">следующая</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}

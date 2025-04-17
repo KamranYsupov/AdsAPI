@@ -11,13 +11,20 @@ User = get_user_model()
 class Ad(CreatedAtMixin):
     """Модель объявления"""
 
-    CONDITION_CHOICES = [
-        ('new', _('Новое')),
-        ('like_new', _('Как новое')),
-        ('used_good', _('Б/У - Хорошее состояние')),
-        ('used_fair', _('Б/У - Удовлетворительное состояние')),
-        ('used_poor', _('Б/У - Плохое состояние')),
-    ]
+    class Condition:
+        NEW = 'new'
+        LIKE_NEW = 'like_new'
+        USED_GOOD = 'used_good'
+        USED_FAIR = 'used_fair'
+        USER_POOR = 'used_poor'
+
+        CHOICES = [
+            (NEW, _('Новое')),
+            (LIKE_NEW, _('Как новое')),
+            (USED_GOOD, _('Б/У - Хорошее состояние')),
+            (USED_FAIR, _('Б/У - Удовлетворительное состояние')),
+            (USER_POOR, _('Б/У - Плохое состояние')),
+        ]
 
     user = models.ForeignKey(
         User,
@@ -46,7 +53,7 @@ class Ad(CreatedAtMixin):
     condition = models.CharField(
         _('Состояние товара'),
         max_length=50,
-        choices=CONDITION_CHOICES
+        choices=Condition.CHOICES
     )
     is_active = models.BooleanField(_('Активно'), default=True)
 

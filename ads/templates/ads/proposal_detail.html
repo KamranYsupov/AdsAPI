@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Предложение обмена #{{ proposal.id }}</h2>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header bg-primary text-white">
+                            Ваше предложение
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{% url 'ad_detail' proposal.ad_sender.id %}">
+                                    {{ proposal.ad_sender.title }}
+                                </a>
+                            </h5>
+                            <p class="card-text">{{ proposal.ad_sender.description }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header bg-success text-white">
+                            Полученное предложение
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{% url 'ad_detail' proposal.ad_receiver.id %}">
+                                    {{ proposal.ad_receiver.title }}
+                                </a>
+                            </h5>
+                            <p class="card-text">{{ proposal.ad_receiver.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="proposal-meta mt-4">
+                <h4>Детали предложения</h4>
+                <table class="table">
+                    <tr>
+                        <th>Статус:</th>
+                        <td>
+                            <span class="badge
+                                {% if proposal.status == 'accepted' %}bg-success
+                                {% elif proposal.status == 'rejected' %}bg-danger
+                                {% else %}bg-warning{% endif %}">
+                                {{ proposal.get_status_display }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Дата создания:</th>
+                        <td>{{ proposal.created_at|date:"d.m.Y H:i" }}</td>
+                    </tr>
+                    {% if proposal.comment %}
+                    <tr>
+                        <th>Комментарий:</th>
+                        <td>{{ proposal.comment }}</td>
+                    </tr>
+                    {% endif %}
+                </table>
+            </div>
+
+            {% if can_respond %}
+            <div class="proposal-actions mt-4">
+                <form method="post" action="{% url 'proposal_update' proposal.id %}">
+                    {% csrf_token %}
+                    <button type="submit" name="status" value="accepted" class="btn btn-success me-2">
+                        <i class="bi bi-check-circle"></i> Принять
+                    </button>
+                    <button type="submit" name="status" value="rejected" class="btn btn-danger">
+                        <i class="bi bi-x-circle"></i> Отклонить
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
