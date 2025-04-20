@@ -9,6 +9,7 @@ a {
 
 
 .ad-card {
+    text-color: white;
     background: white;
     border-radius: 8px;
     padding: 20px;
@@ -16,6 +17,9 @@ a {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.ad-card h3, p {
+    color: white;
+}
 
 .form-group {
     margin-bottom: 1.5rem;
@@ -89,4 +93,36 @@ a {
 .badge {
     font-size: 0.9rem;
     padding: 0.5em 0.75em;
+}
+
+.password-requirements ul li i {
+    color: #198754;
+    margin-right: 5px;
+}
+
+.form-floating input {
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+}
+
+.form-floating label {
+    padding: 1rem 0.75rem;
+}
+
+.form-control:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+
+.invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: .875em;
+    color: #dc3545;
+}
+
+.was-validated .form-control:invalid ~ .invalid-feedback,
+.was-validated .form-control:invalid ~ .invalid-tooltip {
+    display: block;
 }

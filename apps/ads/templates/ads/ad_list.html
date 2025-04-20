@@ -3,11 +3,8 @@
 {% block content %}
 <h1>Список объявлений</h1>
 
-
-
-
 <form method="get">
-    <input type="text" name="q" placeholder="Поиск...">
+    <input type="text" name="q" placeholder="Поиск..." value="{% if query %}{{ query }}{% endif %}">
     <select name="category">
         {% if current_category %}
         <option value="{{ current_category.id }}">{{ current_category.name }}</option>

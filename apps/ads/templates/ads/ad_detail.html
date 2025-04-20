@@ -21,10 +21,17 @@
         <span class="text-muted">Дата: {{ ad.created_at|date:"d.m.Y H:i" }}</span>
     </div>
 
-    {% if user == ad.user %}
+    {% if user == ad.user and ad.is_active %}
     <div class="ad-actions">
-        <a href="{% url 'ad_edit' ad.id %}" class="btn btn-primary">Редактировать</a>
-        <a href="{% url 'ad_delete' ad.id %}" class="btn btn-danger">Удалить</a>
+        <a href="{% url 'ad_edit' ad.id %}" class="btn btn-primary">Редактировать 📝</a>
+        <a href="{% url 'ad_delete' ad.id %}" class="btn btn-danger">Удалить 🗑</a>
+    </div>
+    {% endif %}
+    {% if user.is_authenticated and ad.user != user %}
+    <div class="ad-actions">
+        <a href="{% url 'proposal_create' %}?ad_receiver={{ ad.id }}" class="btn btn-warning">
+            Предложить обмен ⚖️
+        </a>
     </div>
     {% endif %}
 </div>

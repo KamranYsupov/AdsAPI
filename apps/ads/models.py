@@ -58,7 +58,7 @@ class Ad(CreatedAtMixin):
     is_active = models.BooleanField(_('Активно'), default=True)
 
     def __str__(self):
-        return f"{self.title} ({self.user.username})"
+        return self.title
 
     class Meta:
         verbose_name = _('Объявление')
@@ -70,7 +70,7 @@ class ExchangeProposal(CreatedAtMixin):
     """Модель предложения обмена"""
 
     class Status:
-        WAITING = 'pending'
+        WAITING = 'waiting'
         ACCEPTED = 'accepted'
         REJECTED = 'rejected'
 

@@ -14,4 +14,4 @@ class AdForm(forms.ModelForm):
 class ExchangeProposalForm(forms.ModelForm):
     class Meta:
         model = ExchangeProposal
-        fields = ['ad_receiver', 'comment']
+        fields = ['ad_sender', 'ad_receiver', 'comment']

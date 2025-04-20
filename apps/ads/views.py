@@ -28,7 +28,7 @@ def create_ad(request):
 
 
 def ad_detail(request, ad_id):
-    ad = get_object_or_404(Ad, id=ad_id, is_active=True)
+    ad = get_object_or_404(Ad, id=ad_id)
     return render(request, 'ads/ad_detail.html', {'ad': ad})
 
 
@@ -92,6 +92,7 @@ def ad_list(request):
         'ads/ad_list.html',
         {
             'page_obj': page_obj,
+            'query': query,
             'current_category': category,
             'current_condition': (condition, condition_value),
             'categories': Category.objects.all(),
@@ -147,16 +148,24 @@ def create_proposal(request):
 
     if request.method == 'POST':
         form = ExchangeProposalForm(request.POST)
-        form.fields['ad_receiver'].queryset = Ad.objects.exclude(user=request.user)
 
         if form.is_valid():
             proposal = form.save(commit=False)
-            proposal.ad_sender = get_object_or_404(Ad, id=request.POST.get('ad_sender_id'))
             proposal.save()
             return redirect('proposal_detail', proposal_id=proposal.id)
     else:
-        form = ExchangeProposalForm()
-        form.fields['ad_receiver'].queryset = Ad.objects.exclude(user=request.user)
+        form = ExchangeProposalForm(request.GET)
+        form.fields['ad_sender'].queryset = Ad.objects.filter(
+            user=request.user,
+            is_active=True
+        )
+        form.fields['ad_receiver'].queryset = (
+            Ad.objects
+            .filter(is_active=True)
+            .exclude(user=request.user)
+        )
+
+
 
     return render(request, 'ads/proposal_form.html', {
         'form': form,
@@ -207,7 +216,12 @@ def exchange_proposal_list(request):
 @login_required
 def proposal_detail(request, proposal_id):
     proposal = get_object_or_404(
-        ExchangeProposal.objects.select_related('ad_sender', 'ad_receiver'),
+        ExchangeProposal.objects.select_related(
+            'ad_sender',
+            'ad_sender__user',
+            'ad_receiver',
+            'ad_receiver__user'
+        ),
         id=proposal_id
     )
 

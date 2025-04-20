@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-success text-white text-center py-3">
+                    <h3><i class="bi bi-person-plus-fill"></i> Создание аккаунта</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+
+                        <div class="row g-3">
+                            <div class="col-md-10">
+                                <div class="form-floating">
+                                    <i class="bi bi-person-badge"></i> Имя пользователя
+                                    {{ form.username }}
+
+                                    <div class="invalid-feedback">
+                                        Пожалуйста, введите имя пользователя.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <i class="bi bi-lock-fill"></i> Пароль
+                                    {{ form.password1 }}
+
+                                    <div class="invalid-feedback">
+                                        Пароль слишком простой.
+                                    </div>
+                                </div>
+                                <div class="password-requirements mt-2 ps-3">
+                                    <small class="text-muted">
+                                        <ul class="list-unstyled">
+                                            <li><i class="bi bi-check-circle"></i> Минимум 8 символов</li>
+                                            <li><i class="bi bi-check-circle"></i> Не только цифры</li>
+                                        </ul>
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <i class="bi bi-lock-fill"></i> Подтверждение
+                                    {{ form.password2 }}
+                                    <div class="invalid-feedback">
+                                        Пароли не совпадают.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <div class="d-grid">
+                                    <button class="btn btn-success btn-lg" type="submit">
+                                        <i class="bi bi-person-check-fill"></i> Зарегистрироваться
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <p class="mb-0">
+                        Уже есть аккаунт?
+                        <a href="{% url 'login' %}" class="text-success fw-bold">Войдите</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
