@@ -121,29 +121,6 @@ def delete_ad(request, ad_id):
 
 @login_required
 def create_proposal(request):
-    if request.method == 'POST':
-        form = ExchangeProposalForm(request.POST)
-        if form.is_valid():
-            proposal = form.save(commit=False)
-            proposal.ad_sender = Ad.objects.get(
-                id=request.POST.get('ad_sender_id')
-            )
-            proposal.save()
-            return redirect(
-                'proposal_detail',
-                proposal_id=proposal.id
-            )
-    else:
-        form = ExchangeProposalForm()
-    return render(
-        request,
-        'ads/proposal_form.html',
-        {'form': form}
-    )
-
-
-@login_required
-def create_proposal(request):
     user_ads = Ad.objects.filter(user=request.user, is_active=True)
 
     if request.method == 'POST':
@@ -154,7 +131,8 @@ def create_proposal(request):
             proposal.save()
             return redirect('proposal_detail', proposal_id=proposal.id)
     else:
-        form = ExchangeProposalForm(request.GET)
+        form = ExchangeProposalForm(request.GET) if request.GET\
+            else ExchangeProposalForm()
         form.fields['ad_sender'].queryset = Ad.objects.filter(
             user=request.user,
             is_active=True
@@ -164,8 +142,6 @@ def create_proposal(request):
             .filter(is_active=True)
             .exclude(user=request.user)
         )
-
-
 
     return render(request, 'ads/proposal_form.html', {
         'form': form,

@@ -21,7 +21,6 @@
             <div class="navbar-nav">
                 {% if user.is_authenticated %}
                     <a class="nav-link" href="{% url 'ad_create' %}">Создать объявление</a>
-                    <a class="nav-link" href="{% url 'proposal_create' %}">Предложить обмен </a>
                     <form method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
                         <button class="nav-link" type="submit">Выйти</button>
