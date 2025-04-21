@@ -1,0 +1,69 @@
+version: '3.3'
+
+x-function: &base_python
+  volumes:
+    - ./:/:rw
+    - poetry-volume:/poetry:delegated
+  environment: &env-vars
+    POETRY_HOME: /poetry
+    SECRET_KEY: ${SECRET_KEY}
+    DEBUG: ${DEBUG}
+    DB_HOST: ${DB_HOST}
+    DB_NAME: ${DB_NAME}
+    DB_USER: ${DB_USER}
+    DB_PASS: ${DB_PASSWORD}
+  depends_on:
+    - database
+  env_file:
+    - .env
+  networks:
+    - internal
+
+services:
+  database:
+    container_name: ${PROJECT_NAME}_db
+    image: postgres:14.6-alpine
+    volumes:
+      - pg_data:/var/lib/postgresql/data/pgdata:rw
+    env_file:
+      - .env
+    networks:
+      - internal
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_HOST_AUTH_METHOD: trust
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+  nginx:
+    build: ./nginx
+    container_name: ${PROJECT_NAME}_nginx
+    volumes:
+      - static_dir:/static/
+      - media_dir:/media/
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    networks:
+      - internal
+
+  web:
+    <<: *base_python
+    build: .
+    container_name: ${PROJECT_NAME}_web
+    volumes:
+      - static_dir:/static/
+      - media_dir:/media/
+
+volumes:
+  static_dir:
+  media_dir:
+  pg_data:
+  poetry-volume:
+
+networks:
+  internal:
